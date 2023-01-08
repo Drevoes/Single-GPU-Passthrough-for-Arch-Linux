@@ -282,8 +282,8 @@ Scroll back up to the top and look for this:
 </features>
 ```
 add this here
-```
- </os>
+``` 
+</os>
   <features>
     <acpi/>
     <apic/>
@@ -299,6 +299,7 @@ add this here
     <vmport state='off'/>
     <ioapic driver='kvm'/>
     ```
+    
    https://user-images.githubusercontent.com/85000101/211212814-bdb969fc-1a5c-4fe3-aecd-c6fdfb7aa34a.png
  
     
