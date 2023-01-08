@@ -198,129 +198,11 @@ Click **Begin Installation**
 
 ## Hooks
 
-We will begin preparation by creating the hooks and associated scripts.
+This is an amazing hook script made by @risingprismtv on gitlab. What this script does is stop your display manager service and all of your running programs, and unhooks your graphics card off of Linux and rehooks it onto the Windows VM.
 
-Create the hooks directory `$ sudo mkdir /etc/libvirt/hooks`
-
-Get the hook helper with:
-
-```
-$ sudo wget 'https://raw.githubusercontent.com/PassthroughPOST/VFIO-Tools/master/libvirt_hooks/qemu' -O /etc/libvirt/hooks/qemu
-```
-
-Make the qemu file executable `$ sudo chmod +x /etc/libvirt/hooks/qemu`
-
-Create required folders:
-
-```
-$ sudo mkdir /etc/libvirt/hooks/qemu.d /etc/libvirt/hooks/qemu.d/win10 /etc/libvirt/hooks/qemu.d/win10/prepare /etc/libvirt/hooks/qemu.d/win10/prepare/begin /etc/libvirt/hooks/qemu.d/win10/release /etc/libvirt/hooks/qemu.d/win10/release/end
-```
-
-Ensure that your folder/file tree are correct:
-```
-$ sudo pacman -S tree
-$ tree /etc/libvirt/hooks
-```
-You should see something like this:
-```
-├── qemu
-└── qemu.d
-    └── win10
-        ├── prepare
-        │   └── begin
-        └── release
-            └── end
-```
-
-Start nano via `$ sudo nano /etc/libvirt/hooks/qemu.d/win10/prepare/begin/start.sh`
-
-Paste this script into the file via ***CTRL+SHIFT+V***
-
-```
-#!/bin/bash
-## Helpful to read output when debugging
-set -x
-
-# Stop display manager
-systemctl stop display-manager.service
-## Uncomment the following line if you use GDM
-#killall gdm-x-session
-
-# Unbind VTconsoles
-echo 0 > /sys/class/vtconsole/vtcon0/bind
-echo 0 > /sys/class/vtconsole/vtcon1/bind
-
-# Unbind EFI-Framebuffer
-echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
-
-# Avoid a Race condition by waiting 2 seconds. This can be calibrated to be shorter or longer if required for your system
-sleep 2
-
-# Unload all Nvidia drivers
-modprobe -r nvidia_drm
-modprobe -r nvidia_modeset
-modprobe -r nvidia_uvm
-modprobe -r nvidia
-
-## Load vfio
-modprobe vfio
-modprobe vfio_iommu_type1
-modprobe vfio_pci
-```
-
-Convert `start.sh` to executable using `$ sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/start.sh`
-
-Press ***CTRL+O*** to save the file
-
-Start nano again via `$ sudo nano /etc/libvirt/hooks/qemu.d/win10/release/end/stop.sh`
-
-```
-#!/bin/bash
-set -x
-
-## Unload vfio
-modprobe -r vfio_pci
-modprobe -r vfio_iommu_type1
-modprobe -r vfio
-
-# Rebind VT consoles
-echo 1 > /sys/class/vtconsole/vtcon0/bind
-echo 1 > /sys/class/vtconsole/vtcon1/bind
-
-nvidia-xconfig --query-gpu-info > /dev/null 2>&1
-echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
-
-modprobe nvidia_drm
-modprobe nvidia_modeset
-
-modprobe nvidia_uvm
-modprobe nvidia
-
-# Restart Display Manager
-systemctl start display-manager.service
-```
-
-Save again using ***CTRL+O***
-
-Convert `stop.sh` to executable using `$ sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/stop.sh`
-
-Check that your folders/files are in the correct order using `tree /etc/libvirt/hooks`
-
-You should see something like this:
-
-```
-├── qemu
-└── qemu.d
-    └── win10
-        ├── prepare
-        │   └── begin
-        │       └── start.sh
-        └── release
-            └── end
-                └── stop.sh
-```
-
-Thats it for the scripts.
+    Clone Risngprism's single GPU passthrough gitlab page: git clone https://gitlab.com/risingprismtv/single-gpu-passthrough && cd single-gpu-passthrough.
+    Run the install script as sudo: sudo ./install-hooks.sh.
+    The scripts will successfully install into their required places without issue!
 
 ## Patching your VBIOS
 
@@ -399,15 +281,27 @@ Scroll back up to the top and look for this:
   ...
 </features>
 ```
-
-In `<hyperv mode="custom">` add `<vendor_id state="on" value="kvm hyperv"/>`
-
-After `</hypverv>` add this:
-
+add this here
 ```
-<kvm>
-  <hidden state="on"/>
-</kvm>
+ </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <hyperv>
+      <relaxed state='on'/>
+      <vapic state='on'/>
+      <spinlocks state='on' retries='8191'/>
+      <vendor_id state='on' value='123456789123'/>
+    </hyperv>
+    <kvm>
+      <hidden state='on'/>
+    </kvm>
+    <vmport state='off'/>
+    <ioapic driver='kvm'/>
+    ```
+   ![144714995-48ca276b-9300-44c6-9dca-15a1e69705ce](https://user-images.githubusercontent.com/85000101/211212814-bdb969fc-1a5c-4fe3-aecd-c6fdfb7aa34a.png)
+ 
+    
 ```
 add ```<rom file="/var/lib/libvirt/vbios/gpu.rom"/>``` in every xml in relation to your gpu between
 <rom file="/var/lib/libvirt/vbios/gpu.rom"/>
