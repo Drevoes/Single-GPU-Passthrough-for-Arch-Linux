@@ -244,7 +244,7 @@ Save the vbios to another file.
 
 Make a directory called `vgabios` in `/usr/share` `$ sudo mkdir /usr/share/vgabios`
 
-Copy the patched romfile to `/usr/share/vgabios` `$ sudo cp /path/to/patched/vbios/patch.rom /usr/share/vgabios/patch.rom`
+Copy the patched romfile to `/var/lib/libvirt/vbios` `$ sudo cp /path/to/patched/vbios/patch.rom /var/lib/libvirt/vbios/gpu.rom`
 
 Note if there's nothing before the `U` this means your vbios is already patched, you can continue to **GPU Passthrough Settings and Setup**
 
