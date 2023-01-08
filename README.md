@@ -409,7 +409,7 @@ After `</hypverv>` add this:
   <hidden state="on"/>
 </kvm>
 ```
-add this in every xml in relation to your gpu between
+add ```<rom file="/var/lib/libvirt/vbios/gpu.rom"/>``` in every xml in relation to your gpu between
 <rom file="/var/lib/libvirt/vbios/gpu.rom"/>
 ```
 <source>
