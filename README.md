@@ -299,7 +299,7 @@ add this here
     <vmport state='off'/>
     <ioapic driver='kvm'/>
     ```
-   ![144714995-48ca276b-9300-44c6-9dca-15a1e69705ce](https://user-images.githubusercontent.com/85000101/211212814-bdb969fc-1a5c-4fe3-aecd-c6fdfb7aa34a.png)
+   https://user-images.githubusercontent.com/85000101/211212814-bdb969fc-1a5c-4fe3-aecd-c6fdfb7aa34a.png
  
     
 ```
