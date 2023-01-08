@@ -410,7 +410,7 @@ After `</hypverv>` add this:
 </kvm>
 ```
 add this in every xml in relation to your gpu between
-
+<rom file="/var/lib/libvirt/vbios/gpu.rom"/>
 ```
 <source>
 ...
