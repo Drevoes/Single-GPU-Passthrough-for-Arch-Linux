@@ -103,9 +103,8 @@ You should get an output similar to this:
 [    0.325372] AMD-Vi: AMD IOMMUv2 functionality not available on this system - This is not a bug.
 ```
 
-Install all required packages: <br />`$ sudo pacman -S qemu libvirt dmidecode edk2-ovmf virt-manager dnsmasq iptables-nft`
-
-Enable libvirtd `sudo systemctl enable libvirtd` 
+Install automatic virt manager script: git clone https://github.com/BigAnteater/KVM-GPU-Passthrough/ && cd KVM-GPU-Passthrough
+sudo ./libvirt_configuration.sh
 
 You should `reboot` your system now.
 
