@@ -164,6 +164,38 @@ This is what I want to passthrough:
 
 If your groups are not neatly divided you can use the ACS patch, although this can be risky.
 
+## Setting up a VM
+
+Open <b>Virtual Machine Manager (virt-manager)</b>
+
+Go to **Edit**, then **Preferences** and tick **Enable XML Settings** under the **General** tab.
+
+Click on **Create a new virtual machine**, select **local install**.
+
+Click **Browse** and select your Windows 10 ISO file. It is recommended that you do not rename your Windows 10 ISO file - this way **Virtman** recognises the ISO as being a Windows 10 OS and will select the operating system automatically. If it doesn't detect it, uncheck the **Automatically detect** check box and just start typing 'Windows' and it will show Windows 10 as an option.
+
+Select the amount of RAM you would like to passthrough.
+
+Select your storage option and size.
+
+Make sure that the name of the VM is `win10` exactly.
+
+Tick **Customize configuration before install** then click finish.
+
+Change firmware to **OVMF_CODE**
+
+Go to **CPUs**
+
+Click **Topology**
+
+Tick **Manually set CPU topology**
+
+Select the ammount of cores and threads you want for your VM.
+
+I will be using 4 cores 1 threads in this example.
+
+Click **Begin Installation**
+
 ## Hooks
 
 We will begin preparation by creating the hooks and associated scripts.
@@ -290,38 +322,6 @@ You should see something like this:
 
 Thats it for the scripts.
 
-## Setting up a VM
-
-Open <b>Virtual Machine Manager (virt-manager)</b>
-
-Go to **Edit**, then **Preferences** and tick **Enable XML Settings** under the **General** tab.
-
-Click on **Create a new virtual machine**, select **local install**.
-
-Click **Browse** and select your Windows 10 ISO file. It is recommended that you do not rename your Windows 10 ISO file - this way **Virtman** recognises the ISO as being a Windows 10 OS and will select the operating system automatically. If it doesn't detect it, uncheck the **Automatically detect** check box and just start typing 'Windows' and it will show Windows 10 as an option.
-
-Select the amount of RAM you would like to passthrough.
-
-Select your storage option and size.
-
-Make sure that the name of the VM is `win10` exactly.
-
-Tick **Customize configuration before install** then click finish.
-
-Change firmware to **OVMF_CODE**
-
-Go to **CPUs**
-
-Click **Topology**
-
-Tick **Manually set CPU topology**
-
-Select the ammount of cores and threads you want for your VM.
-
-I will be using 4 cores 1 threads in this example.
-
-Click **Begin Installation**
-
 ## Patching your VBIOS
 
 <b>Download your VBIOS from (https://www.techpowerup.com/vgabios/)</b>
@@ -409,6 +409,10 @@ After `</hypverv>` add this:
   <hidden state="on"/>
 </kvm>
 ```
+add this in every xml in relation to your gpu between
+<source>
+...
+<address>
 
 Click **Apply**.
 
